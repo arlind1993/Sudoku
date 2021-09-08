@@ -6,28 +6,31 @@ public class MyGridLayout<Type> {
 
     private int rows;
     private int cols;
-
     private Type[][] objects;
     private int offsets;
 
-    public MyGridLayout(int rows,int cols, int offsets, Type[][] objects){
+    public MyGridLayout(int rows,int cols, int offsets,  Type[][] objects){
         this.rows=rows;
         this.cols=cols;
         this.offsets=offsets;
+        this.objects=objects;
     }
 
     void setLocationOfType(int posY, int posX){
-        if (posX>0&&posX<rows
-        && posY>0&&posY<cols){
-            Container c=(Container)(objects[posY][posX]);
-            c.setLocation(posX*(offsets+JCustomButton.SIZE),posY*(offsets+JCustomButton.SIZE));
-        }
 
+        Container c=(Container)(objects[posY][posX]);
+        System.out.print(posX +","+posY+" = "+(posX*(offsets+c.getWidth())+offsets)+","+(posY*(offsets+c.getHeight())+offsets));
+        if (posX>=0&&posX<cols && posY>=0&&posY<rows){
+
+            c.setLocation(posX*(offsets+c.getWidth())+offsets,posY*(offsets+c.getHeight())+offsets);
+        }
+        System.out.println("       "+c);
     }
 
     public Type[][] getObject() {
         return objects;
     }
+
     public int getRows() {
         return rows;
     }

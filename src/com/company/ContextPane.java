@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class ContextPane extends JPanel {
 
-        public final static int WIDTH = 900;
+    public final static int WIDTH = 900;
     public final static int HEIGHT = 600;
 
     private JGrid jGrid;
@@ -19,7 +19,7 @@ public class ContextPane extends JPanel {
         jGrid=new JGrid();
         jGrid.setLocation(5,5);
         sap=new SudokuActionPanel();
-        sap.setLocation(600,200);
+        sap.setLocation(630,200);
 
         this.add(jGrid);
         this.add(sap);
