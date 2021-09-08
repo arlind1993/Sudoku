@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.MouseListener;
 
 public class JCustomButton extends JPanel {
-
     public static final int SIZE = 60;
 
     private boolean isHovering= false;
@@ -17,7 +16,6 @@ public class JCustomButton extends JPanel {
 
     public JCustomButton(){
         this.setLayout(null);
-        this.setBackground(Color.CYAN);
         this.setSize(SIZE,SIZE);
 
         buttonModel = new DefaultButtonModel();
@@ -39,6 +37,7 @@ public class JCustomButton extends JPanel {
     }
 
     public void setMouseListener(MouseListener mouseListener) {
+        System.out.println("..");
         this.mouseListener = mouseListener;
         addMouseListener(this.mouseListener);
     }

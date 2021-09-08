@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 public class SudokuActionPanel extends JPanel {
 
@@ -33,6 +34,7 @@ public class SudokuActionPanel extends JPanel {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 actionButtons[i][j]= new JCustomButton();
+                actionButtons[i][j].setBackground(MyColorPalette.WHITE);
                 jPanelMyGridLayout.setLocationOfType(i, j);
                 this.add(actionButtons[i][j]);
             }
@@ -56,7 +58,7 @@ public class SudokuActionPanel extends JPanel {
 
         actionButtons[3][2].setName("Clear");
 
-        actionButtons[3][0].setName("");
+        actionButtons[3][0].setName("-");
 
         actionButtons[4][0].setName("Undo");
         actionButtons[4][1].setName("Redo");
@@ -67,38 +69,94 @@ public class SudokuActionPanel extends JPanel {
         panelGroup.add(actionButtons[1][3]);
         panelGroup.add(actionButtons[2][3]);
         panelGroup.add(actionButtons[3][3]);
-
+        panelGroup.setSelected(actionButtons[0][3]);
+        updateToggleColor();
         for (int i = 0; i <= 3; i++) {
             int finalI = i;
             actionButtons[i][3].setMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
+                @Override public void mouseClicked(MouseEvent e) {
 
                 }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    System.out.println(panelGroup.getActualButtonSelected().getName());
+                @Override public void mousePressed(MouseEvent e) {
                     panelGroup.setSelected(actionButtons[finalI][3]);
+                    updateToggleColor();
                 }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
+                @Override public void mouseReleased(MouseEvent e) {
 
                 }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
+                @Override public void mouseEntered(MouseEvent e) {
+                    actionButtons[finalI][3].setHovering(true);
+                    updateToggleColor();
+                }
+                @Override public void mouseExited(MouseEvent e) {
+                    actionButtons[finalI][3].setHovering(false);
+                    updateToggleColor();
                 }
             });
         }
 
+        Integer[][] numberMapping= new Integer[][]{
+                {0,0}, {0,1}, {0,2},
+                {1,0}, {1,1}, {1,2},
+                {2,0}, {2,1}, {2,2},
+                       {3,1}
+        };
+        updateCLickNrColor();
+        for (int i = 0; i < numberMapping.length; i++) {
+                JCustomButton actButton = actionButtons[numberMapping[i][0]][numberMapping[i][1]];
+            System.out.println(actButton.getName());
+                actButton.setMouseListener(new MouseListener() {
+                    @Override public void mouseClicked(MouseEvent e) {
+
+                    }
+                    @Override public void mousePressed(MouseEvent e) {
+                        //
+                    }
+                    @Override public void mouseReleased(MouseEvent e) {
+
+                    }
+                    @Override public void mouseEntered(MouseEvent e) {
+                        actButton.setHovering(true);
+                        updateCLickNrColor();
+                    }
+                    @Override public void mouseExited(MouseEvent e) {
+                        actButton.setHovering(false);
+                        updateCLickNrColor();
+                    }
+                });
+        }
+
+    }
+
+    private void updateToggleColor() {
+        for (int i = 0; i <= 4; i++) {
+            JCustomButton jCustomButton= actionButtons[i][3];
+            if (jCustomButton.isClicked()) {
+                if (jCustomButton.isHovering()) {
+                    jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
+                } else {
+                    jCustomButton.setBackground(MyColorPalette.ORCHID);
+                }
+            } else {
+                if (jCustomButton.isHovering()) {
+                    jCustomButton.setBackground(MyColorPalette.PASTEL_VIOLET);
+                } else {
+                    jCustomButton.setBackground(MyColorPalette.WHITE);
+                }
+            }
+        }
+    }
+    private void updateCLickNrColor() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 3; j++) {
+                JCustomButton jCustomButton= actionButtons[i][j];
+                if (jCustomButton.isHovering()) {
+                    jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
+                } else {
+                    jCustomButton.setBackground(MyColorPalette.ORCHID);
+                }
+            }
+        }
     }
 
 }
