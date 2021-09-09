@@ -8,8 +8,8 @@ public class JGrid extends JPanel {
     public static final int SIZE_PER_CELL = 60;
     public static final int SIZE=SIZE_PER_CELL*Grid.SIZE+LINE_WIDTH*(Grid.SIZE+1);//590
     private Grid grid;
-
     private JGridMouseListener jgml;
+    private boolean markPenActivated = false;
     public JGrid(){
         this.setLayout(null);
         this.setSize(SIZE,SIZE);
@@ -28,8 +28,17 @@ public class JGrid extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawBoundaries(g);
+        drawMarkedCells(g);
 
+    }
 
+    private void drawMarkedCells(Graphics g) {
+        g.setColor(MyColorPalette.LIGHT_BLUE);
+        for (Cell markedCell: grid.getMarkedCells()) {
+            g.fillRect(LINE_WIDTH+(SIZE_PER_CELL+LINE_WIDTH)*markedCell.getCol(),
+                    LINE_WIDTH+(SIZE_PER_CELL+LINE_WIDTH)*markedCell.getRow(),
+                    SIZE_PER_CELL,SIZE_PER_CELL);
+        }
     }
 
     private void drawBoundaries(Graphics g) {
@@ -53,5 +62,13 @@ public class JGrid extends JPanel {
 
     public Grid getGrid() {
         return grid;
+    }
+
+    public boolean isMarkPenActivated() {
+        return markPenActivated;
+    }
+
+    public void setMarkPenActivated(boolean markPenActivated) {
+        this.markPenActivated = markPenActivated;
     }
 }

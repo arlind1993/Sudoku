@@ -1,7 +1,6 @@
 package com.company;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseListener;
 
 public class JCustomButton extends JPanel {
@@ -37,7 +36,6 @@ public class JCustomButton extends JPanel {
     }
 
     public void setMouseListener(MouseListener mouseListener) {
-        System.out.println("..");
         this.mouseListener = mouseListener;
         addMouseListener(this.mouseListener);
     }

@@ -18,7 +18,7 @@ public class ContextPane extends JPanel {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         jGrid=new JGrid();
         jGrid.setLocation(5,5);
-        sap=new SudokuActionPanel();
+        sap=new SudokuActionPanel(jGrid);
         sap.setLocation(630,200);
 
         this.add(jGrid);

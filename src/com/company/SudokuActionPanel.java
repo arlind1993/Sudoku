@@ -19,7 +19,10 @@ public class SudokuActionPanel extends JPanel {
     private JPanelGroup panelGroup;
     private JCustomButton [][] actionButtons;
     private MyGridLayout<JPanel> jPanelMyGridLayout;
-    public SudokuActionPanel(){
+
+    private JGrid jGrid;
+    public SudokuActionPanel(JGrid jGrid){
+        this.jGrid=jGrid;
         this.setLayout(null);
         initButtons();
 
@@ -63,7 +66,7 @@ public class SudokuActionPanel extends JPanel {
         actionButtons[4][0].setName("Undo");
         actionButtons[4][1].setName("Redo");
         actionButtons[4][2].setName("Check");
-        actionButtons[3][2].setName("Select");
+        actionButtons[4][2].setName("Select");
 
         panelGroup.add(actionButtons[0][3]);
         panelGroup.add(actionButtons[1][3]);
@@ -103,14 +106,50 @@ public class SudokuActionPanel extends JPanel {
         };
         updateCLickNrColor();
         for (int i = 0; i < numberMapping.length; i++) {
-                JCustomButton actButton = actionButtons[numberMapping[i][0]][numberMapping[i][1]];
-            System.out.println(actButton.getName());
+            JCustomButton actButton = actionButtons[numberMapping[i][0]][numberMapping[i][1]];
                 actButton.setMouseListener(new MouseListener() {
                     @Override public void mouseClicked(MouseEvent e) {
 
                     }
                     @Override public void mousePressed(MouseEvent e) {
-                        //
+                        for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
+                            if (panelGroup.getActualButtonSelected().getName().equals("Digit")) {
+                                if (markedCell.getFinalDigit()==null){
+                                    markedCell.setFinalDigit(Integer.parseInt(actButton.getName()));
+                                }else{
+                                    if (markedCell.getFinalDigit()==Integer.parseInt(actButton.getName())){
+                                        markedCell.setFinalDigit(null);
+                                    }else{
+                                        markedCell.setFinalDigit(Integer.parseInt(actButton.getName()));
+                                    }
+                                }
+
+                            }else if (panelGroup.getActualButtonSelected().getName().equals("Corner")) {
+
+                                if (markedCell.getFinalDigit()==null){
+                                    if (markedCell.getCornerDigits().contains(Integer.parseInt(actButton.getName()))){
+                                        markedCell.removeCornerDigit(Integer.parseInt(actButton.getName()));
+                                    }else{
+                                        markedCell.addCornerDigit(Integer.parseInt(actButton.getName()));
+                                    }
+                                }
+                            }else if (panelGroup.getActualButtonSelected().getName().equals("Center")) {
+                                if (markedCell.getFinalDigit()==null){
+                                    if (markedCell.getCenterDigits().contains(Integer.parseInt(actButton.getName()))){
+                                        markedCell.removeCenterDigit(Integer.parseInt(actButton.getName()));
+                                    }else{
+                                        markedCell.addCenterDigit(Integer.parseInt(actButton.getName()));
+                                    }
+                                }
+                            }else if (panelGroup.getActualButtonSelected().getName().equals("Color")) {
+                                if (markedCell.getColors().contains(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())))){
+                                    markedCell.removeColor(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())));
+                                }else{
+                                    markedCell.addColor(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())));
+                                }
+                            }
+                        }
+
                     }
                     @Override public void mouseReleased(MouseEvent e) {
 
@@ -125,6 +164,50 @@ public class SudokuActionPanel extends JPanel {
                     }
                 });
         }
+        actionButtons[3][2].setMouseListener(new MouseListener() {
+            @Override public void mouseClicked(MouseEvent e) {
+
+            }
+            @Override public void mousePressed(MouseEvent e) {
+                for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
+                    if (markedCell.getFinalDigit()!=null){
+                        markedCell.setFinalDigit(null);
+                    }
+                    else if (markedCell.getCenterDigits().size()>0 &&
+                            panelGroup.getActualButtonSelected().getName().equals("Center")){
+                        markedCell.getCenterDigits().clear();
+                    }
+                    else if (markedCell.getCornerDigits().size()>0 &&
+                            panelGroup.getActualButtonSelected().getName().equals("Corner")){
+                        markedCell.getCornerDigits().clear();
+                    }
+                    else if (markedCell.getColors().size()>0 &&
+                            panelGroup.getActualButtonSelected().getName().equals("Color")){
+                        markedCell.getColors().clear();
+                    }
+                    else if (markedCell.getCenterDigits().size()>0){
+                        markedCell.getCenterDigits().clear();
+                    }
+                    else if (markedCell.getCornerDigits().size()>0){
+                        markedCell.getCornerDigits().clear();
+                    }
+                    else if (markedCell.getColors().size()>0){
+                        markedCell.getColors().clear();
+                    }
+                }
+            }
+            @Override public void mouseReleased(MouseEvent e) {
+
+            }
+            @Override public void mouseEntered(MouseEvent e) {
+                actionButtons[3][2].setHovering(true);
+                updateCLickNrColor();
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                actionButtons[3][2].setHovering(false);
+                updateCLickNrColor();
+            }
+        });
 
     }
 
