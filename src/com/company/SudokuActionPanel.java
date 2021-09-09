@@ -66,7 +66,7 @@ public class SudokuActionPanel extends JPanel {
         actionButtons[4][0].setName("Undo");
         actionButtons[4][1].setName("Redo");
         actionButtons[4][2].setName("Check");
-        actionButtons[4][2].setName("Select");
+        actionButtons[4][3].setName("Select");
 
         panelGroup.add(actionButtons[0][3]);
         panelGroup.add(actionButtons[1][3]);
@@ -97,6 +97,36 @@ public class SudokuActionPanel extends JPanel {
                 }
             });
         }
+
+        actionButtons[4][3].setMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                actionButtons[4][3].setClicked(!actionButtons[4][3].isClicked());
+                jGrid.setMarkPenActivated(actionButtons[4][3].isClicked());
+                updateToggleColor();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                actionButtons[4][3].setHovering(false);
+                updateToggleColor();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                actionButtons[4][3].setHovering(true);
+                updateToggleColor();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                updateToggleColor();
+            }
+        });
 
         Integer[][] numberMapping= new Integer[][]{
                 {0,0}, {0,1}, {0,2},
