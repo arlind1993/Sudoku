@@ -26,10 +26,10 @@ public class JGridMouseListener implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.print(e.getPoint());
-
         posX=(e.getX()-JGrid.LINE_WIDTH)/(JGrid.SIZE_PER_CELL+JGrid.LINE_WIDTH);
         posY=(e.getY()-JGrid.LINE_WIDTH)/(JGrid.SIZE_PER_CELL+JGrid.LINE_WIDTH);
+
+        System.out.println(e.getPoint() +"  "+ jGrid.getGrid().getCells()[posY][posX]);
 
         if (!jGrid.isMarkPenActivated()){
             for (int i = 0; i < Grid.SIZE; i++) {
@@ -57,8 +57,6 @@ public class JGridMouseListener implements MouseListener, MouseMotionListener {
             oldPosX=posX;
             oldPosY=posY;
         }
-
-        System.out.println(" "+posY+" , "+posX);
         jGrid.repaint();
 
     }
@@ -80,14 +78,10 @@ public class JGridMouseListener implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        System.out.println(jGrid.getGrid().getMarkedCells().toString());
-        System.out.print(e.getPoint());
-
         posX=(e.getX()-JGrid.LINE_WIDTH)/(JGrid.SIZE_PER_CELL+JGrid.LINE_WIDTH);
         posY=(e.getY()-JGrid.LINE_WIDTH)/(JGrid.SIZE_PER_CELL+JGrid.LINE_WIDTH);
 
         if (posX>=0&&posX<Grid.SIZE && posY>=0&&posY<Grid.SIZE){
-            boolean check = false;
             if (jGrid.isMarkPenActivated()){
                 if (state==1){
                     jGrid.getGrid().getCells()[posY][posX].setMarked(true);
@@ -103,7 +97,6 @@ public class JGridMouseListener implements MouseListener, MouseMotionListener {
                 }
             }
         }
-
         jGrid.repaint();
     }
 

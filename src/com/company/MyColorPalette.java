@@ -8,8 +8,9 @@ public class MyColorPalette extends Color {
     public static final Color LAVENDER = new Color(200, 150, 210);
     public static final Color DARK_VIOLET = new Color(40, 25, 40);
     public static final Color ORCHID = new Color( 100, 50, 100);
-    public static final Color LIME = new Color(88, 135, 165);
-    public static final Color LIGHT_BLUE = new Color(50,180,200);
+    public static final Color LIME = new Color(80, 200, 80);
+    public static final Color LIGHT_BLUE = new Color(100, 180, 200);
+    public static final Color LIGHT_CYAN = new Color(126,183,248);
     public static final Color TRANSPARENT = new Color(0,0,0, 0);
 
 
@@ -45,7 +46,7 @@ public class MyColorPalette extends Color {
             case 6: return ORANGE;
             case 7: return RED;
             case 8: return YELLOW;
-            case 9: return LIGHT_BLUE;
+            case 9: return LIGHT_CYAN;
             case 0: return TRANSPARENT;
             default: return null;
         }

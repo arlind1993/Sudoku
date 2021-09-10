@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 public class SudokuActionPanel extends JPanel {
 
@@ -75,24 +74,24 @@ public class SudokuActionPanel extends JPanel {
         panelGroup.setSelected(actionButtons[0][3]);
         updateToggleColor();
         for (int i = 0; i <= 3; i++) {
-            int finalI = i;
+            int I = i;
             actionButtons[i][3].setMouseListener(new MouseListener() {
                 @Override public void mouseClicked(MouseEvent e) {
 
                 }
                 @Override public void mousePressed(MouseEvent e) {
-                    panelGroup.setSelected(actionButtons[finalI][3]);
+                    panelGroup.setSelected(actionButtons[I][3]);
                     updateToggleColor();
                 }
                 @Override public void mouseReleased(MouseEvent e) {
 
                 }
                 @Override public void mouseEntered(MouseEvent e) {
-                    actionButtons[finalI][3].setHovering(true);
+                    actionButtons[I][3].setHovering(true);
                     updateToggleColor();
                 }
                 @Override public void mouseExited(MouseEvent e) {
-                    actionButtons[finalI][3].setHovering(false);
+                    actionButtons[I][3].setHovering(false);
                     updateToggleColor();
                 }
             });
@@ -135,64 +134,81 @@ public class SudokuActionPanel extends JPanel {
                        {3,1}
         };
         updateCLickNrColor();
-        for (int i = 0; i < numberMapping.length; i++) {
-            JCustomButton actButton = actionButtons[numberMapping[i][0]][numberMapping[i][1]];
-                actButton.setMouseListener(new MouseListener() {
-                    @Override public void mouseClicked(MouseEvent e) {
+        for (Integer[] integers : numberMapping) {
+            JCustomButton actButton = actionButtons[integers[0]][integers[1]];
+            actButton.setMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
 
-                    }
-                    @Override public void mousePressed(MouseEvent e) {
-                        for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
-                            if (panelGroup.getActualButtonSelected().getName().equals("Digit")) {
-                                if (markedCell.getFinalDigit()==null){
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
+                        switch (panelGroup.getActualButtonSelected().getName()) {
+                            case "Digit":
+                                if (markedCell.getFinalDigit() == null) {
                                     markedCell.setFinalDigit(Integer.parseInt(actButton.getName()));
-                                }else{
-                                    if (markedCell.getFinalDigit()==Integer.parseInt(actButton.getName())){
+                                } else {
+                                    if (markedCell.getFinalDigit() == Integer.parseInt(actButton.getName())) {
                                         markedCell.setFinalDigit(null);
-                                    }else{
+                                    } else {
                                         markedCell.setFinalDigit(Integer.parseInt(actButton.getName()));
                                     }
                                 }
 
-                            }else if (panelGroup.getActualButtonSelected().getName().equals("Corner")) {
-
-                                if (markedCell.getFinalDigit()==null){
-                                    if (markedCell.getCornerDigits().contains(Integer.parseInt(actButton.getName()))){
+                                break;
+                            case "Corner":
+                                if (markedCell.getFinalDigit() == null) {
+                                    if (markedCell.getCornerDigits().contains(Integer.parseInt(actButton.getName()))) {
                                         markedCell.removeCornerDigit(Integer.parseInt(actButton.getName()));
-                                    }else{
+                                    } else {
                                         markedCell.addCornerDigit(Integer.parseInt(actButton.getName()));
                                     }
                                 }
-                            }else if (panelGroup.getActualButtonSelected().getName().equals("Center")) {
-                                if (markedCell.getFinalDigit()==null){
-                                    if (markedCell.getCenterDigits().contains(Integer.parseInt(actButton.getName()))){
+                                break;
+                            case "Center":
+                                if (markedCell.getFinalDigit() == null) {
+                                    if (markedCell.getCenterDigits().contains(Integer.parseInt(actButton.getName()))) {
                                         markedCell.removeCenterDigit(Integer.parseInt(actButton.getName()));
-                                    }else{
+                                    } else {
                                         markedCell.addCenterDigit(Integer.parseInt(actButton.getName()));
                                     }
                                 }
-                            }else if (panelGroup.getActualButtonSelected().getName().equals("Color")) {
-                                if (markedCell.getColors().contains(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())))){
-                                    markedCell.removeColor(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())));
-                                }else{
-                                    markedCell.addColor(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())));
+                                break;
+                            case "Color":
+                                if (actButton.getName().equals("0")) {
+                                    markedCell.getColors().clear();
+                                } else {
+                                    if (markedCell.getColors().contains(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())))) {
+                                        markedCell.removeColor(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())));
+                                    } else {
+                                        markedCell.addColor(MyColorPalette.cellColoring(Integer.parseInt(actButton.getName())));
+                                    }
                                 }
-                            }
+                                break;
                         }
+                    }
+                    jGrid.repaint();
+                }
 
-                    }
-                    @Override public void mouseReleased(MouseEvent e) {
+                @Override
+                public void mouseReleased(MouseEvent e) {
 
-                    }
-                    @Override public void mouseEntered(MouseEvent e) {
-                        actButton.setHovering(true);
-                        updateCLickNrColor();
-                    }
-                    @Override public void mouseExited(MouseEvent e) {
-                        actButton.setHovering(false);
-                        updateCLickNrColor();
-                    }
-                });
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    actButton.setHovering(true);
+                    updateCLickNrColor();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    actButton.setHovering(false);
+                    updateCLickNrColor();
+                }
+            });
         }
         actionButtons[3][2].setMouseListener(new MouseListener() {
             @Override public void mouseClicked(MouseEvent e) {
@@ -225,6 +241,7 @@ public class SudokuActionPanel extends JPanel {
                         markedCell.getColors().clear();
                     }
                 }
+                jGrid.repaint();
             }
             @Override public void mouseReleased(MouseEvent e) {
 
@@ -258,6 +275,7 @@ public class SudokuActionPanel extends JPanel {
                 }
             }
         }
+        jGrid.repaint();
     }
     private void updateCLickNrColor() {
         for (int i = 0; i < 4; i++) {
@@ -270,6 +288,7 @@ public class SudokuActionPanel extends JPanel {
                 }
             }
         }
+        jGrid.repaint();
     }
 
 }
