@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Stack;
 
 public class SudokuActionPanel extends JPanel {
 
@@ -15,7 +16,7 @@ public class SudokuActionPanel extends JPanel {
 
     public final int offset = 5;
 
-    private JPanelGroup panelGroup;
+    private Stack<JPanelGroup> panelGroup;
     private JCustomButton [][] actionButtons;
     private MyGridLayout<JPanel> jPanelMyGridLayout;
 
@@ -23,30 +24,29 @@ public class SudokuActionPanel extends JPanel {
     public SudokuActionPanel(JGrid jGrid){
         this.jGrid=jGrid;
         this.setLayout(null);
-        initButtons();
-
         this.setSize(WIDTH,HEIGHT);
         this.setBackground(Color.DARK_GRAY);
+        initButtons();
+
     }
 
     private void initButtons() {
-        panelGroup = new JPanelGroup();
+        panelGroup=new Stack<>();
         actionButtons= new JCustomButton[rows][cols];
         jPanelMyGridLayout = new MyGridLayout<>(rows,cols, offset, actionButtons);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                actionButtons[i][j]= new JCustomButton();
-                actionButtons[i][j].setBackground(MyColorPalette.WHITE);
-                jPanelMyGridLayout.setLocationOfType(i, j);
-                this.add(actionButtons[i][j]);
+                if(!(j==3&&i<=3)) {
+                    actionButtons[i][j] = new JCustomButton();
+                    actionButtons[i][j].setBackground(MyColorPalette.WHITE);
+                    jPanelMyGridLayout.setLocationOfType(i, j);
+                    this.add(actionButtons[i][j]);
+                }
             }
         }
+        panelGroup.add(new JPanelGroup(this));
 
-        actionButtons[0][3].setName("Digit");
-        actionButtons[1][3].setName("Corner");
-        actionButtons[2][3].setName("Center");
-        actionButtons[3][3].setName("Color");
-
+        FIStackUpdate();
         actionButtons[0][0].setName("1");
         actionButtons[0][1].setName("2");
         actionButtons[0][2].setName("3");
@@ -67,35 +67,7 @@ public class SudokuActionPanel extends JPanel {
         actionButtons[4][2].setName("Check");
         actionButtons[4][3].setName("Select");
 
-        panelGroup.add(actionButtons[0][3]);
-        panelGroup.add(actionButtons[1][3]);
-        panelGroup.add(actionButtons[2][3]);
-        panelGroup.add(actionButtons[3][3]);
-        panelGroup.setSelected(actionButtons[0][3]);
-        updateToggleColor();
-        for (int i = 0; i <= 3; i++) {
-            int I = i;
-            actionButtons[i][3].setMouseListener(new MouseListener() {
-                @Override public void mouseClicked(MouseEvent e) {
 
-                }
-                @Override public void mousePressed(MouseEvent e) {
-                    panelGroup.setSelected(actionButtons[I][3]);
-                    updateToggleColor();
-                }
-                @Override public void mouseReleased(MouseEvent e) {
-
-                }
-                @Override public void mouseEntered(MouseEvent e) {
-                    actionButtons[I][3].setHovering(true);
-                    updateToggleColor();
-                }
-                @Override public void mouseExited(MouseEvent e) {
-                    actionButtons[I][3].setHovering(false);
-                    updateToggleColor();
-                }
-            });
-        }
 
         actionButtons[4][3].setMouseListener(new MouseListener() {
             @Override
@@ -111,8 +83,6 @@ public class SudokuActionPanel extends JPanel {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                actionButtons[4][3].setHovering(false);
-                updateToggleColor();
             }
 
             @Override
@@ -123,6 +93,7 @@ public class SudokuActionPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
+                actionButtons[4][3].setHovering(false);
                 updateToggleColor();
             }
         });
@@ -145,7 +116,7 @@ public class SudokuActionPanel extends JPanel {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
-                        switch (panelGroup.getActualButtonSelected().getName()) {
+                        switch (getFIPanelGroup().getActualButtonSelected().getName()) {
                             case "Digit":
                                 if (markedCell.getFinalDigit() == null) {
                                     markedCell.setFinalDigit(Integer.parseInt(actButton.getName()));
@@ -220,15 +191,15 @@ public class SudokuActionPanel extends JPanel {
                         markedCell.setFinalDigit(null);
                     }
                     else if (markedCell.getCenterDigits().size()>0 &&
-                            panelGroup.getActualButtonSelected().getName().equals("Center")){
+                            getFIPanelGroup().getActualButtonSelected().getName().equals("Center")){
                         markedCell.getCenterDigits().clear();
                     }
                     else if (markedCell.getCornerDigits().size()>0 &&
-                            panelGroup.getActualButtonSelected().getName().equals("Corner")){
+                            getFIPanelGroup().getActualButtonSelected().getName().equals("Corner")){
                         markedCell.getCornerDigits().clear();
                     }
                     else if (markedCell.getColors().size()>0 &&
-                            panelGroup.getActualButtonSelected().getName().equals("Color")){
+                            getFIPanelGroup().getActualButtonSelected().getName().equals("Color")){
                         markedCell.getColors().clear();
                     }
                     else if (markedCell.getCenterDigits().size()>0){
@@ -258,9 +229,12 @@ public class SudokuActionPanel extends JPanel {
 
     }
 
-    private void updateToggleColor() {
+    public void updateToggleColor() {
+
+        //System.out.println("StackNr:"+panelGroup.size());
         for (int i = 0; i <= 4; i++) {
             JCustomButton jCustomButton= actionButtons[i][3];
+            //System.out.println("@actionButtons["+i+"][3]:"+jCustomButton);
             if (jCustomButton.isClicked()) {
                 if (jCustomButton.isHovering()) {
                     jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
@@ -275,9 +249,12 @@ public class SudokuActionPanel extends JPanel {
                 }
             }
         }
+        //System.out.println("repainted");
         jGrid.repaint();
+        repaint();
+        //System.out.println();
     }
-    private void updateCLickNrColor() {
+    public void updateCLickNrColor() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 3; j++) {
                 JCustomButton jCustomButton= actionButtons[i][j];
@@ -289,6 +266,70 @@ public class SudokuActionPanel extends JPanel {
             }
         }
         jGrid.repaint();
+        repaint();
     }
 
+    public Stack<JPanelGroup> getPanelGroup() {
+        return panelGroup;
+    }
+
+    public JPanelGroup getFIPanelGroup() {
+        return panelGroup.peek();
+    }
+
+    public JCustomButton[][] getActionButtons() {
+        return actionButtons;
+    }
+
+    public MyGridLayout<JPanel> getjPanelMyGridLayout() {
+        return jPanelMyGridLayout;
+    }
+
+    public void FIStackUpdate() {
+
+        for (int i = 0; i < 4; i++) {
+            if (getActionButtons()[i][3]!=null) {
+                if (getActionButtons()[i][3].getParent()==this) {
+                    remove(getActionButtons()[i][3]);
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int I = i;
+            getActionButtons()[i][3] = getFIPanelGroup().getButtons().get(i);
+            getjPanelMyGridLayout().setLocationOfType(i, 3);
+            add(getActionButtons()[i][3]);
+            getActionButtons()[i][3].setMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    getFIPanelGroup().setActualButtonSelected(getActionButtons()[I][3]);
+                    updateToggleColor();
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    getActionButtons()[I][3].setHovering(true);
+                    updateToggleColor();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    getActionButtons()[I][3].setHovering(false);
+                    updateToggleColor();
+                }
+            });
+        }
+        updateToggleColor();
+    }
 }

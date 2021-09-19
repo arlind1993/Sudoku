@@ -1,15 +1,34 @@
 package com.company;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class JPanelGroup {
-    private Vector<JCustomButton> buttons = new Vector<>();
+    private SudokuActionPanel sap;
+    private ArrayList<JCustomButton> buttons = new ArrayList<>();
     private JCustomButton actualButtonSelected = null;
 
-    public JPanelGroup() {
+    public JPanelGroup(SudokuActionPanel sap) {
+        this.sap=sap;
+        initButtons();
+    }
+
+    private void initButtons() {
+        for (int i = 0; i < 4; i++) {
+            buttons.add(new JCustomButton());
+            buttons.get(i).setBackground(MyColorPalette.WHITE);
+        }
+
+
+        buttons.get(0).setName("Digit");
+        buttons.get(1).setName("Corner");
+        buttons.get(2).setName("Center");
+        buttons.get(3).setName("Color");
+        setActualButtonSelected(buttons.get(0));
+
 
     }
-    public Vector<JCustomButton> getButtons() {
+
+    public ArrayList<JCustomButton> getButtons() {
         return buttons;
     }
     public JCustomButton getActualButtonSelected() {
@@ -30,10 +49,10 @@ public class JPanelGroup {
         if(b == null) {
             return;
         }
-        buttons.addElement(b);
+        buttons.add(b);
         if (b.isClicked()) {
             if (actualButtonSelected == null) {
-                actualButtonSelected = b;
+                setActualButtonSelected(b);
             } else {
                 b.setClicked(false);
             }
@@ -44,22 +63,25 @@ public class JPanelGroup {
         if(b == null) {
             return;
         }
-        buttons.removeElement(b);
+        buttons.remove(b);
         if(b == actualButtonSelected) {
             actualButtonSelected = null;
         }
 
     }
 
-    public void setSelected(JCustomButton m) {
-        if (m != null && m != actualButtonSelected) {
-            JCustomButton oldSelection = actualButtonSelected;
-            actualButtonSelected = m;
-            if (oldSelection != null) {
-                oldSelection.setClicked(false);
+    public void setActualButtonSelected(JCustomButton m) {
+        if (m != null) {
+            for (int i = 0; i < buttons.size(); i++) {
+                if (buttons.get(i).equals(m)){
+                    actualButtonSelected=buttons.get(i);
+                    buttons.get(i).setClicked(true);
+                }else {
+                    buttons.get(i).setClicked(false);
+                }
             }
-            m.setClicked(true);
         }
+
     }
 
     public void clearSelection() {
@@ -68,6 +90,30 @@ public class JPanelGroup {
             actualButtonSelected = null;
             old.setClicked(false);
         }
+    }
+
+    @Override
+    public String toString() {
+        int pos=-1;
+        for (int i = 0, buttonsSize = buttons.size(); i < buttonsSize; i++) {
+            if (buttons.get(i).equals(actualButtonSelected)){
+                pos=i;
+                break;
+            }
+        }
+
+        return "JPanelGroup{" +
+                "buttons=" + buttons +
+                ", aBS={"+pos+ "_" + actualButtonSelected +"}"+
+                '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        JPanelGroup that = (JPanelGroup) o;
+
+        return buttons.size()==that.buttons.size() && actualButtonSelected.equals(that.actualButtonSelected);
     }
 
 }

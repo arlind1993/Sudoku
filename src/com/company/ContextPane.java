@@ -28,6 +28,11 @@ public class ContextPane extends JPanel {
         this.addKeyListener(cpkl);
     }
 
+    public ContextPaneKeyboardListener getCpkl() {
+        return cpkl;
+    }
 
-
+    public SudokuActionPanel getSap() {
+        return sap;
+    }
 }
