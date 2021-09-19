@@ -40,9 +40,9 @@ public class ContextPaneKeyboardListener implements KeyListener {
                     heldKeysCheckChanges.clear();
                     heldKeysCheckChanges.addAll(heldKeys);
                     heldKeys.add(clickKey);
+                    actionHold();
                 }
                 actionClick();
-                actionHold();
                 System.out.println("P:"+this);
             }
         }
@@ -69,10 +69,11 @@ public class ContextPaneKeyboardListener implements KeyListener {
                         heldKeysCheckChanges.clear();
                         heldKeysCheckChanges.addAll(heldKeys);
                         heldKeys.remove(evk);
+                        System.out.println("++++++");
+                        actionHold();
                         break;
                     }
                 }
-                actionHold();
             }
             System.out.println("R:"+this);
         }

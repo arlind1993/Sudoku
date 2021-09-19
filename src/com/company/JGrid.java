@@ -12,7 +12,6 @@ public class JGrid extends JPanel {
     public static final int SIZE_PER_CELL = 60;
     public static final int SIZE=SIZE_PER_CELL*Grid.SIZE+LINE_WIDTH*(Grid.SIZE+1);//590
 
-    private CommandManager commandManager;
 
     private Grid grid;
     private JGridMouseListener jgml;
