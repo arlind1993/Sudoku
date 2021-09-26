@@ -3,6 +3,7 @@ package com.company;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.IntStream;
 
 public class Cell {
     public static final int COLOR_LIMIT = 4;
@@ -22,6 +23,15 @@ public class Cell {
         this.row=row;
         this.col=col;
         this.box=3*(row/3)+col/3;
+    }
+
+    public Cell(Cell other) {
+        this(other.getRow(), other.getCol());
+        marked=other.marked;
+        finalDigit=other.finalDigit;
+        centerDigits.addAll(other.centerDigits);
+        cornerDigits.addAll(other.cornerDigits);
+        colors.addAll(other.colors);
     }
 
     public int getRow() {
@@ -88,14 +98,14 @@ public class Cell {
     @Override
     public String toString() {
         return "Cell{" +
-                "row=" + row +
-                ", col=" + col +
-                ", box=" + box +
-                ", marked=" + marked +
-                ", finalDigit=" + finalDigit +
-                ", centerDigits=" + centerDigits +
-                ", cornerDigits=" + cornerDigits +
-                ", colors=" + colors +
+                "[" + row +
+                "][" + col +
+                "], box=" + box +
+                ", isMa=" + (marked?"T":"F") +
+                ", fD=" + finalDigit +
+                ", ceD=" + centerDigits +
+                ", coD=" + cornerDigits +
+                ", col=" + colors +
                 '}';
     }
 }

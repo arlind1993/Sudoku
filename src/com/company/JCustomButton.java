@@ -1,6 +1,7 @@
 package com.company;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseListener;
 import java.util.Objects;
 
@@ -58,7 +59,7 @@ public class JCustomButton extends JPanel {
     public String toString() {
         return "JCB{" +
                 "name=" + getName() +
-                "isC=" + isClicked +
+                ", isC=" + isClicked +
                 '}';
     }
 
@@ -68,6 +69,22 @@ public class JCustomButton extends JPanel {
         if (o == null) return false;
         JCustomButton that = (JCustomButton) o;
         return isClicked == that.isClicked && Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+
+        setToolTipText(name);
+    }
+
+    @Override
+    public JToolTip createToolTip() {
+        JToolTip tip = new JToolTip();
+        tip.setBackground(Color.WHITE);
+        tip.setBorder(null);
+        tip.setComponent(this);
+        return tip;
     }
 
 }

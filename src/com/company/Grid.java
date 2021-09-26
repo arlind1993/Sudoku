@@ -1,10 +1,10 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Grid {
     public static final int SIZE=9;
-
     private Cell[][] cells= new Cell[SIZE][SIZE];
     public Grid(){
         for (int i = 0; i < 9; i++) {
@@ -12,6 +12,10 @@ public class Grid {
                 cells[i][j]=new Cell(i,j);
             }
         }
+    }
+
+    public static void checkGrid(Grid Grid) {
+
     }
 
     public Cell[][] getCells() {
@@ -28,5 +32,14 @@ public class Grid {
             }
         }
         return markedCells;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Grid{" +
+                "cells=" + Arrays.toString(cells) +
+                '}';
     }
 }

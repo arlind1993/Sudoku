@@ -2,28 +2,27 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class JGrid extends JPanel {
+
+    public static final int MAX_STACK_LENGTH = 50;
 
     public static final int LINE_WIDTH=5;
     public static final int SIZE_PER_CELL = 60;
     public static final int SIZE=SIZE_PER_CELL*Grid.SIZE+LINE_WIDTH*(Grid.SIZE+1);//590
 
-
-    private Grid grid;
+    private Stack<Grid> undoGrids = new Stack<>();
+    private Stack<Grid> redoGrids = new Stack<>();
     private JGridMouseListener jgml;
+
     private boolean markPenActivated = false;
 
     public JGrid(){
         this.setLayout(null);
         this.setSize(SIZE,SIZE);
         this.setBackground(Color.WHITE);
-
-
-        grid = new Grid();
+        addToUndoGrid(new Grid());
         System.out.println(SIZE);
 
 
@@ -41,7 +40,7 @@ public class JGrid extends JPanel {
     }
 
     private void drawMarkingsInCell(Graphics g) {
-        for (Cell[] rows : grid.getCells()) {
+        for (Cell[] rows : getFIGrid().getCells()) {
             for (Cell cell : rows) {
                 int posX = LINE_WIDTH + cell.getCol() * (SIZE_PER_CELL + LINE_WIDTH);
                 int posY = LINE_WIDTH + cell.getRow() * (SIZE_PER_CELL + LINE_WIDTH);
@@ -161,7 +160,7 @@ public class JGrid extends JPanel {
 
     private void drawMarkedCells(Graphics g) {
         g.setColor(MyColorPalette.LIGHT_BLUE);
-        for (Cell markedCell: grid.getMarkedCells()) {
+        for (Cell markedCell: getFIGrid().getMarkedCells()) {
             g.fillRect(LINE_WIDTH+(SIZE_PER_CELL+LINE_WIDTH)*markedCell.getCol(),
                     LINE_WIDTH+(SIZE_PER_CELL+LINE_WIDTH)*markedCell.getRow(),
                     SIZE_PER_CELL,LINE_WIDTH);
@@ -204,8 +203,75 @@ public class JGrid extends JPanel {
         g.drawString(text, x, y);
     }
 
-    public Grid getGrid() {
-        return grid;
+    public Grid getFIGrid() {
+        return undoGrids.peek();
+    }
+
+    public void addToUndoGrid(Grid element) {
+        if (undoGrids!=null) {
+            if (undoGrids.size() >= MAX_STACK_LENGTH) {
+                undoGrids.remove(undoGrids.size() - 1);
+            }
+            undoGrids.add(element);
+            System.out.println("Added in Undo List: "+undoGrids.size());
+        }
+    }
+    public void addToRedoGrid(Grid element) {
+        if (undoGrids!=null) {
+            if (redoGrids.size() >= MAX_STACK_LENGTH) {
+                redoGrids.remove(redoGrids.size()-1);
+            }
+            redoGrids.add(element);
+            System.out.println("Added in Redo List: "+redoGrids.size());
+        }
+    }
+
+
+    public void removeFromUndoGridFI() {
+        if (undoGrids.size() > 1) {
+            undoGrids.pop();
+            System.out.println("Removed in Undo List: " + undoGrids.size());
+        }
+    }
+
+    public void removeFromRedoGridFI(){
+        redoGrids.pop();
+        System.out.println("Removed in Redo List: "+redoGrids.size());
+    }
+
+    public void resetUndoGridAcceptLastElement(){
+        int size=undoGrids.size();
+        for (int i = 0; i < size; i++) {
+            removeFromUndoGridFI();
+        }
+    }
+
+    public void resetRedoGrid(){
+        redoGrids.clear();
+    }
+
+    public Stack<Grid> getUndoGrids() {
+        return undoGrids;
+    }
+
+    public Stack<Grid> getRedoGrids() {
+        return redoGrids;
+    }
+
+    public Grid createNewGrid(boolean getFromUndo){
+        Grid result = new Grid();
+        Grid getFrom;
+        if (getFromUndo){
+            getFrom=undoGrids.peek();
+        }else {
+            getFrom=redoGrids.peek();
+        }
+        for (int i = 0; i < getFrom.getCells().length; i++) {
+            for (int j = 0; j < getFrom.getCells()[i].length; j++) {
+                result.getCells()[i][j]=new Cell(getFrom.getCells()[i][j]);
+            }
+        }
+        return result;
     }
 
     public boolean isMarkPenActivated() {
@@ -214,5 +280,10 @@ public class JGrid extends JPanel {
 
     public void setMarkPenActivated(boolean markPenActivated) {
         this.markPenActivated = markPenActivated;
+    }
+
+    public void actionHappenedLogic(){
+        addToUndoGrid(createNewGrid(true));
+        resetRedoGrid();
     }
 }

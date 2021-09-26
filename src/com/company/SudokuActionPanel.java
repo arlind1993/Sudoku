@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 import java.util.Stack;
 
 public class SudokuActionPanel extends JPanel {
-
     public static final int WIDTH=265;
     public static final int HEIGHT=395;
 
@@ -60,41 +59,87 @@ public class SudokuActionPanel extends JPanel {
 
         actionButtons[3][2].setName("Clear");
 
-        actionButtons[3][0].setName("-");
+        actionButtons[3][0].setName("Check");
 
-        actionButtons[4][0].setName("Undo");
-        actionButtons[4][1].setName("Redo");
-        actionButtons[4][2].setName("Check");
+        actionButtons[4][0].setName("Reset");
+        actionButtons[4][1].setName("Undo");
+        actionButtons[4][2].setName("Redo");
         actionButtons[4][3].setName("Select");
 
-
-
-        actionButtons[4][3].setMouseListener(new MouseListener() {
+        actionButtons[4][0].setMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                jGrid.resetUndoGridAcceptLastElement();
+                jGrid.resetRedoGrid();
+                jGrid.repaint();
             }
-
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {
+                actionButtons[4][0].setHovering(true);
+                updateToggleColor(actionButtons[4][0]);
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                actionButtons[4][0].setHovering(false);
+                updateToggleColor(actionButtons[4][0]);
+            }
+        });
+        
+        actionButtons[4][1].setMouseListener(new MouseListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
+                if(jGrid.getUndoGrids().size()>1) {
+                    jGrid.addToRedoGrid(jGrid.createNewGrid(true));
+                    jGrid.removeFromUndoGridFI();
+                    jGrid.repaint();
+                }
+            }
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {
+                actionButtons[4][1].setHovering(true);
+                updateToggleColor(actionButtons[4][1]);
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                actionButtons[4][1].setHovering(false);
+                updateToggleColor(actionButtons[4][1]);
+            }
+        });
+
+        actionButtons[4][2].setMouseListener(new MouseListener() {
+            @Override public void mouseClicked(MouseEvent e) {
+                if(jGrid.getRedoGrids().size()>0) {
+                    jGrid.addToUndoGrid(jGrid.createNewGrid(false));
+                    jGrid.removeFromRedoGridFI();
+                    jGrid.repaint();
+                }
+            }
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {
+                actionButtons[4][2].setHovering(true);
+                updateToggleColor(actionButtons[4][2]);
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                actionButtons[4][2].setHovering(false);
+                updateToggleColor(actionButtons[4][2]);
+            }
+        });
+        actionButtons[4][3].setMouseListener(new MouseListener() {
+            @Override public void mouseClicked(MouseEvent e) {}
+            @Override public void mousePressed(MouseEvent e) {
                 actionButtons[4][3].setClicked(!actionButtons[4][3].isClicked());
                 jGrid.setMarkPenActivated(actionButtons[4][3].isClicked());
-                updateToggleColor();
+                updateToggleColor(actionButtons[4][3]);
             }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {
                 actionButtons[4][3].setHovering(true);
-                updateToggleColor();
+                updateToggleColor(actionButtons[4][3]);
             }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
+            @Override public void mouseExited(MouseEvent e) {
                 actionButtons[4][3].setHovering(false);
-                updateToggleColor();
+                updateToggleColor(actionButtons[4][3]);
             }
         });
 
@@ -104,18 +149,17 @@ public class SudokuActionPanel extends JPanel {
                 {2,0}, {2,1}, {2,2},
                        {3,1}
         };
-        updateCLickNrColor();
+
         for (Integer[] integers : numberMapping) {
             JCustomButton actButton = actionButtons[integers[0]][integers[1]];
+            updateCLickNrColor(actButton);
             actButton.setMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
+                @Override public void mouseClicked(MouseEvent e) {}
+                @Override public void mousePressed(MouseEvent e) {
+                    if ( jGrid.getFIGrid().getMarkedCells().size()>0) {
+                        jGrid.actionHappenedLogic();
+                    }
+                    for (Cell markedCell : jGrid.getFIGrid().getMarkedCells()) {
                         switch (getFIPanelGroup().getActualButtonSelected().getName()) {
                             case "Digit":
                                 if (markedCell.getFinalDigit() == null) {
@@ -162,31 +206,41 @@ public class SudokuActionPanel extends JPanel {
                     }
                     jGrid.repaint();
                 }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
+                @Override public void mouseReleased(MouseEvent e) {}
+                @Override public void mouseEntered(MouseEvent e) {
                     actButton.setHovering(true);
-                    updateCLickNrColor();
+                    updateCLickNrColor(actButton);
                 }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
+                @Override public void mouseExited(MouseEvent e) {
                     actButton.setHovering(false);
-                    updateCLickNrColor();
+                    updateCLickNrColor(actButton);
                 }
             });
         }
-        actionButtons[3][2].setMouseListener(new MouseListener() {
-            @Override public void mouseClicked(MouseEvent e) {
-
-            }
+        updateCheckColor(actionButtons[3][0]);
+        actionButtons[3][0].setMouseListener(new MouseListener() {
+            @Override public void mouseClicked(MouseEvent e) {}
             @Override public void mousePressed(MouseEvent e) {
-                for (Cell markedCell : jGrid.getGrid().getMarkedCells()) {
+                Grid.checkGrid(jGrid.getFIGrid());
+            }
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {
+                actionButtons[3][0].setHovering(true);
+                updateCheckColor(actionButtons[3][0]);
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                actionButtons[3][0].setHovering(false);
+                updateCheckColor(actionButtons[3][0]);
+            }
+        });
+        updateCLickNrColor(actionButtons[3][2]);
+        actionButtons[3][2].setMouseListener(new MouseListener() {
+            @Override public void mouseClicked(MouseEvent e) {}
+            @Override public void mousePressed(MouseEvent e) {
+                if ( jGrid.getFIGrid().getMarkedCells().size()>0) {
+                    jGrid.actionHappenedLogic();
+                }
+                for (Cell markedCell : jGrid.getFIGrid().getMarkedCells()) {
                     if (markedCell.getFinalDigit()!=null){
                         markedCell.setFinalDigit(null);
                     }
@@ -214,58 +268,54 @@ public class SudokuActionPanel extends JPanel {
                 }
                 jGrid.repaint();
             }
-            @Override public void mouseReleased(MouseEvent e) {
-
-            }
+            @Override public void mouseReleased(MouseEvent e) {}
             @Override public void mouseEntered(MouseEvent e) {
                 actionButtons[3][2].setHovering(true);
-                updateCLickNrColor();
+                updateCLickNrColor(actionButtons[3][2]);
             }
             @Override public void mouseExited(MouseEvent e) {
                 actionButtons[3][2].setHovering(false);
-                updateCLickNrColor();
+                updateCLickNrColor(actionButtons[3][2]);
             }
         });
 
     }
 
-    public void updateToggleColor() {
-
-        //System.out.println("StackNr:"+panelGroup.size());
-        for (int i = 0; i <= 4; i++) {
-            JCustomButton jCustomButton= actionButtons[i][3];
-            //System.out.println("@actionButtons["+i+"][3]:"+jCustomButton);
-            if (jCustomButton.isClicked()) {
-                if (jCustomButton.isHovering()) {
-                    jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
-                } else {
-                    jCustomButton.setBackground(MyColorPalette.ORCHID);
-                }
-            } else {
-                if (jCustomButton.isHovering()) {
-                    jCustomButton.setBackground(MyColorPalette.PASTEL_VIOLET);
-                } else {
-                    jCustomButton.setBackground(MyColorPalette.WHITE);
-                }
-            }
+    public void updateCheckColor(JCustomButton jCustomButton){
+        if (jCustomButton.isHovering()) {
+            jCustomButton.setBackground(MyColorPalette.DARK_ROSE);
+        } else {
+            jCustomButton.setBackground(MyColorPalette.ROSE);
         }
-        //System.out.println("repainted");
-        jGrid.repaint();
+        revalidate();
         repaint();
-        //System.out.println();
     }
-    public void updateCLickNrColor() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 3; j++) {
-                JCustomButton jCustomButton= actionButtons[i][j];
-                if (jCustomButton.isHovering()) {
-                    jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
-                } else {
-                    jCustomButton.setBackground(MyColorPalette.ORCHID);
-                }
+
+    public void updateToggleColor(JCustomButton jCustomButton) {
+        if (jCustomButton.isClicked()) {
+            if (jCustomButton.isHovering()) {
+                jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
+            } else {
+                jCustomButton.setBackground(MyColorPalette.ORCHID);
+            }
+        } else {
+            if (jCustomButton.isHovering()) {
+                jCustomButton.setBackground(MyColorPalette.PASTEL_VIOLET);
+            } else {
+                jCustomButton.setBackground(MyColorPalette.WHITE);
             }
         }
-        jGrid.repaint();
+        revalidate();
+        repaint();
+
+    }
+    public void updateCLickNrColor(JCustomButton jCustomButton) {
+        if (jCustomButton.isHovering()) {
+            jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
+        } else {
+            jCustomButton.setBackground(MyColorPalette.ORCHID);
+        }
+        revalidate();
         repaint();
     }
 
@@ -300,6 +350,7 @@ public class SudokuActionPanel extends JPanel {
             getActionButtons()[i][3] = getFIPanelGroup().getButtons().get(i);
             getjPanelMyGridLayout().setLocationOfType(i, 3);
             add(getActionButtons()[i][3]);
+            updateToggleColor(getActionButtons()[i][3]);
             getActionButtons()[i][3].setMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -309,7 +360,10 @@ public class SudokuActionPanel extends JPanel {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     getFIPanelGroup().setActualButtonSelected(getActionButtons()[I][3]);
-                    updateToggleColor();
+                    updateToggleColor(getActionButtons()[0][3]);
+                    updateToggleColor(getActionButtons()[1][3]);
+                    updateToggleColor(getActionButtons()[2][3]);
+                    updateToggleColor(getActionButtons()[3][3]);
                 }
 
                 @Override
@@ -320,16 +374,15 @@ public class SudokuActionPanel extends JPanel {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     getActionButtons()[I][3].setHovering(true);
-                    updateToggleColor();
+                    updateToggleColor(getActionButtons()[I][3]);
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     getActionButtons()[I][3].setHovering(false);
-                    updateToggleColor();
+                    updateToggleColor(getActionButtons()[I][3]);
                 }
             });
         }
-        updateToggleColor();
     }
 }

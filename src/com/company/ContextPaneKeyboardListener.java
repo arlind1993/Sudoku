@@ -2,6 +2,7 @@ package com.company;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class ContextPaneKeyboardListener implements KeyListener {
@@ -46,9 +47,6 @@ public class ContextPaneKeyboardListener implements KeyListener {
                 System.out.println("P:"+this);
             }
         }
-
-
-
     }
 
     @Override
