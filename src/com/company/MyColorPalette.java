@@ -12,28 +12,14 @@ public class MyColorPalette extends Color {
     public static final Color LIGHT_BLUE = new Color(100, 180, 200);
     public static final Color LIGHT_CYAN = new Color(126,183,248);
     public static final Color TRANSPARENT = new Color(0,0,0, 0);
-
+    public static final Color ROSE = new Color(200, 15, 25);
+    public static final Color DARK_ROSE = new Color(120, 15, 15);
 
     public MyColorPalette(int r, int g, int b) {
         super(r, g, b);
     }
     public MyColorPalette(int r, int g, int b, int a) {
         super(r, g, b, a);
-    }
-    public MyColorPalette(int rgb) {
-        super(rgb);
-    }
-    public MyColorPalette(int rgba, boolean hasalpha) {
-        super(rgba, hasalpha);
-    }
-    public MyColorPalette(float r, float g, float b) {
-        super(r, g, b);
-    }
-    public MyColorPalette(float r, float g, float b, float a) {
-        super(r, g, b, a);
-    }
-    public MyColorPalette(ColorSpace cspace, float[] components, float alpha) {
-        super(cspace, components, alpha);
     }
 
     public static Color cellColoring(int id){
