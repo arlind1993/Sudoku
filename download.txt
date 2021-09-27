@@ -1,0 +1,45 @@
+private void actionClick() {
+        if(clickKey!=null){
+            switch(clickKey.keyCode){
+                case 27: //ESC
+                    if(cp.getJGrid().getFIGrid().getMarkedCells().size()>0){
+                        cp.getJGrid().actionHappenedLogic();
+                        for( Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()){
+                            cell.setMarked(false);
+                        }
+                        cp.getJGrid().repaint();
+                    }
+                    break;
+                case 8: //BCP
+                    break;
+                case 127: //DEL 
+                    break;
+                case 90: //Z
+                    break;
+                case 88: //X
+                    break;
+                case 67: //C
+                    break;
+                case 86: //V
+                    break;
+                case 65: //A
+                    break;
+                case 83: //S
+                    break;
+                case 68: //D
+                    break;
+                case 87: //W
+                    break;
+                case 37: //AK_LEFT
+                    break;
+                case 38: //AK_UP
+                    break;
+                case 39: //AK_RIGHT
+                    break;
+                case 40: //AK_DOWN
+                    break;
+            }
+        }
+    }
+    
+
