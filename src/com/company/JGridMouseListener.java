@@ -13,7 +13,6 @@ public class JGridMouseListener implements MouseListener, MouseMotionListener {
     private int posX;
     private int posY;
 
-
     private int state=0;//0- nothing 1- adding 2- deleting
 
     public JGridMouseListener(JGrid jGrid){
@@ -79,7 +78,16 @@ public class JGridMouseListener implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        posX=(e.getX()-JGrid.LINE_WIDTH)/(JGrid.SIZE_PER_CELL+JGrid.LINE_WIDTH);
+        posY=(e.getY()-JGrid.LINE_WIDTH)/(JGrid.SIZE_PER_CELL+JGrid.LINE_WIDTH);
 
+        if(posX>=0&&posX<Grid.SIZE && posY>=0&&posY<Grid.SIZE){
+            if(jGrid.getFIGrid().getCells()[posY][posX].isMarked()){
+                jGrid.getFIGrid().setLastCellMarked(jGrid.getFIGrid().getCells()[posY][posX]);
+            }else{
+                jGrid.getFIGrid().setLastCellMarked(null);
+            }
+        }
     }
 
     @Override

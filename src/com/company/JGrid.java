@@ -271,6 +271,9 @@ public class JGrid extends JPanel {
                 result.getCells()[i][j]=new Cell(getFrom.getCells()[i][j]);
             }
         }
+        if (getFrom.getLastCellMarked()!=null) {
+            result.setLastCellMarked(new Cell(getFrom.getLastCellMarked()));
+        }
         return result;
     }
 
@@ -286,4 +289,5 @@ public class JGrid extends JPanel {
         addToUndoGrid(createNewGrid(true));
         resetRedoGrid();
     }
+
 }

@@ -171,7 +171,6 @@ public class SudokuActionPanel extends JPanel {
                                         markedCell.setFinalDigit(Integer.parseInt(actButton.getName()));
                                     }
                                 }
-
                                 break;
                             case "Corner":
                                 if (markedCell.getFinalDigit() == null) {
@@ -309,6 +308,14 @@ public class SudokuActionPanel extends JPanel {
         repaint();
 
     }
+
+    public void updateToggleColorForPanelGroup(){
+        for (JCustomButton button: getFIPanelGroup().getButtons()) {
+            updateToggleColor(button);
+        }
+
+    }
+
     public void updateCLickNrColor(JCustomButton jCustomButton) {
         if (jCustomButton.isHovering()) {
             jCustomButton.setBackground(MyColorPalette.DARK_VIOLET);
@@ -360,10 +367,7 @@ public class SudokuActionPanel extends JPanel {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     getFIPanelGroup().setActualButtonSelected(getActionButtons()[I][3]);
-                    updateToggleColor(getActionButtons()[0][3]);
-                    updateToggleColor(getActionButtons()[1][3]);
-                    updateToggleColor(getActionButtons()[2][3]);
-                    updateToggleColor(getActionButtons()[3][3]);
+                    updateToggleColorForPanelGroup();
                 }
 
                 @Override

@@ -37,7 +37,7 @@ public class ContextPaneKeyboardListener implements KeyListener {
 
             if (!beenClicked){
                 if (clickKey.isHoldable){
-                    System.out.println("add");
+                    //System.out.println("add");
                     heldKeysCheckChanges.clear();
                     heldKeysCheckChanges.addAll(heldKeys);
                     heldKeys.add(clickKey);
@@ -63,17 +63,16 @@ public class ContextPaneKeyboardListener implements KeyListener {
                 for (int i = 0; i < heldKeys.size(); i++) {
                     //System.out.println(heldKeys.get(i) +" ---- " + evk);
                     if (heldKeys.get(i).equals(evk)){
-                        System.out.println("remove");
+                        //System.out.println("remove");
                         heldKeysCheckChanges.clear();
                         heldKeysCheckChanges.addAll(heldKeys);
                         heldKeys.remove(evk);
-                        System.out.println("++++++");
                         actionHold();
                         break;
                     }
                 }
             }
-            System.out.println("R:"+this);
+            //System.out.println("R:"+this);
         }
     }
 
@@ -129,6 +128,210 @@ public class ContextPaneKeyboardListener implements KeyListener {
         }
     }
 
+    private void actionClick() {
+        if(clickKey!=null){
+            switch(clickKey.keyCode){
+                case 27: //ESC
+                    if(cp.getJGrid().getFIGrid().getMarkedCells().size()>0){
+                        cp.getJGrid().actionHappenedLogic();
+                        for( Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()){
+                            cell.setMarked(false);
+                        }
+                        cp.getJGrid().getFIGrid().setLastCellMarked(null);
+                        cp.getJGrid().repaint();
+                    }
+                    break;
+                case 8: //BCP
+                case 127: //DEL
+                    boolean broke=false;
+                    if(cp.getJGrid().getFIGrid().getMarkedCells().size()>0){
+                        for( Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()){
+                            if (cell.getFinalDigit()!=null|| cell.getCornerDigits().size()>0||
+                                    cell.getCenterDigits().size()>0 || cell.getColors().size()>0) {
+                                cp.getJGrid().actionHappenedLogic();
+                                broke=true;
+                                break;
+                            }
+                        }
+                        if (broke) {
+                            for (Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                                if (cell.getFinalDigit() != null) {
+                                    cell.setFinalDigit(null);
+                                } else if (cell.getCornerDigits().size() > 0) {
+                                    cell.getCornerDigits().clear();
+                                } else if (cell.getCenterDigits().size() > 0) {
+                                    cell.getCenterDigits().clear();
+                                } else if (cell.getColors().size() > 0) {
+                                    cell.getColors().clear();
+                                }
+                            }
+                            cp.getJGrid().repaint();
+                        }
+                    }
+                    break;
+                case 90: //Z
+                    cp.getSap().getPanelGroup().get(0).setActualButtonSelected(
+                            cp.getSap().getPanelGroup().get(0).getButtons().get(0)
+                    );
+                    cp.getSap().updateToggleColorForPanelGroup();
+                    break;
+                case 88: //X
+                    cp.getSap().getPanelGroup().get(0).setActualButtonSelected(
+                            cp.getSap().getPanelGroup().get(0).getButtons().get(1)
+                    );
+                    cp.getSap().updateToggleColorForPanelGroup();
+                    break;
+                case 67: //C
+                    cp.getSap().getPanelGroup().get(0).setActualButtonSelected(
+                            cp.getSap().getPanelGroup().get(0).getButtons().get(2)
+                    );
+                    cp.getSap().updateToggleColorForPanelGroup();
+                    break;
+                case 86: //V
+                    cp.getSap().getPanelGroup().get(0).setActualButtonSelected(
+                            cp.getSap().getPanelGroup().get(0).getButtons().get(3)
+                    );
+                    cp.getSap().updateToggleColorForPanelGroup();
+                    break;
+                case 65: //A
+                case 37: //AK_LEFT
+                    if (cp.getJGrid().getFIGrid().getLastCellMarked()!=null){
+                        cp.getJGrid().actionHappenedLogic();
+                        if (heldKeys.size()==0) {
+                            for (Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                                cell.setMarked(false);
+                            }
+                        }
+                        int posX = cp.getJGrid().getFIGrid().getLastCellMarked().getCol();
+                        int posY = cp.getJGrid().getFIGrid().getLastCellMarked().getRow();
+                        if (posX==0){
+                            posX=Grid.SIZE-1;
+                        }else{
+                            posX--;
+                        }
+                        cp.getJGrid().getFIGrid().setLastCellMarked(cp.getJGrid().getFIGrid().getCells()[posY][posX]);
+                        cp.getJGrid().repaint();
+                    }
+                    break;
+                case 83: //S
+                case 40: //AK_DOWN
+                    if (cp.getJGrid().getFIGrid().getLastCellMarked()!=null){
+                        cp.getJGrid().actionHappenedLogic();
+                        if (heldKeys.size()==0) {
+                            for (Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                                cell.setMarked(false);
+                            }
+                        }
+                        int posX = cp.getJGrid().getFIGrid().getLastCellMarked().getCol();
+                        int posY = cp.getJGrid().getFIGrid().getLastCellMarked().getRow();
+                        if (posY==Grid.SIZE-1){
+                            posY=0;
+                        }else{
+                            posY++;
+                        }
+                        cp.getJGrid().getFIGrid().setLastCellMarked(cp.getJGrid().getFIGrid().getCells()[posY][posX]);
+                        cp.getJGrid().repaint();
+                    }
+                    break;
+                case 68: //D
+                case 39: //AK_RIGHT
+                    if (cp.getJGrid().getFIGrid().getLastCellMarked()!=null){
+                        cp.getJGrid().actionHappenedLogic();
+                        if (heldKeys.size()==0) {
+                            for (Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                                cell.setMarked(false);
+                            }
+                        }
+                        int posX = cp.getJGrid().getFIGrid().getLastCellMarked().getCol();
+                        int posY = cp.getJGrid().getFIGrid().getLastCellMarked().getRow();
+                        if (posX==Grid.SIZE-1){
+                            posX=0;
+                        }else{
+                            posX++;
+                        }
+                        cp.getJGrid().getFIGrid().setLastCellMarked(cp.getJGrid().getFIGrid().getCells()[posY][posX]);
+                        cp.getJGrid().repaint();
+                    }
+                    break;
+                case 87: //W
+                case 38: //AK_UP
+                    if (cp.getJGrid().getFIGrid().getLastCellMarked()!=null){
+                        cp.getJGrid().actionHappenedLogic();
+                        if (heldKeys.size()==0) {
+                            for (Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                                cell.setMarked(false);
+                            }
+                        }
+                        int posX = cp.getJGrid().getFIGrid().getLastCellMarked().getCol();
+                        int posY = cp.getJGrid().getFIGrid().getLastCellMarked().getRow();
+                        if (posY==0){
+                            posY=Grid.SIZE-1;
+                        }else{
+                            posY--;
+                        }
+                        cp.getJGrid().getFIGrid().setLastCellMarked(cp.getJGrid().getFIGrid().getCells()[posY][posX]);
+                        cp.getJGrid().repaint();
+                    }
+                    break;
+            }
+            int actNum=-1;
+            if (clickKey.keyCode>=96 && clickKey.keyCode<=105){
+                actNum=clickKey.keyCode-96;
+            } else if(clickKey.keyCode>=48 && clickKey.keyCode<=57){
+                actNum=clickKey.keyCode-48;
+            }
+            if (actNum>=0&&actNum<9){
+                cp.getJGrid().actionHappenedLogic();
+                for (Cell markedCell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                    switch (cp.getSap().getFIPanelGroup().getActualButtonSelected().getName()) {
+                        case "Digit":
+                            if (markedCell.getFinalDigit() == null) {
+                                markedCell.setFinalDigit(actNum);
+                            } else {
+                                if (markedCell.getFinalDigit() == actNum) {
+                                    markedCell.setFinalDigit(null);
+                                } else {
+                                    markedCell.setFinalDigit(actNum);
+                                }
+                            }
+
+                            break;
+                        case "Corner":
+                            if (markedCell.getFinalDigit() == null) {
+                                if (markedCell.getCornerDigits().contains(actNum)) {
+                                    markedCell.removeCornerDigit(actNum);
+                                } else {
+                                    markedCell.addCornerDigit(actNum);
+                                }
+                            }
+                            break;
+                        case "Center":
+                            if (markedCell.getFinalDigit() == null) {
+                                if (markedCell.getCenterDigits().contains(actNum)) {
+                                    markedCell.removeCenterDigit(actNum);
+                                } else {
+                                    markedCell.addCenterDigit(actNum);
+                                }
+                            }
+                            break;
+                        case "Color":
+                            if (actNum==0) {
+                                markedCell.getColors().clear();
+                            } else {
+                                if (markedCell.getColors().contains(MyColorPalette.cellColoring(actNum))) {
+                                    markedCell.removeColor(MyColorPalette.cellColoring(actNum));
+                                } else {
+                                    markedCell.addColor(MyColorPalette.cellColoring(actNum));
+                                }
+                            }
+                            break;
+                    }
+                }
+                cp.getJGrid().repaint();
+            }
+        }
+    }
+
     private void addNewStack(int buttonPos) {
         JPanelGroup newPanelGroup = new JPanelGroup(cp.getSap());
         newPanelGroup.setActualButtonSelected(newPanelGroup.getButtons().get(buttonPos));
@@ -160,10 +363,6 @@ public class ContextPaneKeyboardListener implements KeyListener {
         cp.getSap().FIStackUpdate();
     }
 
-
-    private void actionClick() {
-
-    }
 
     @Override
     public String toString() {

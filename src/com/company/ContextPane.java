@@ -35,4 +35,8 @@ public class ContextPane extends JPanel {
     public SudokuActionPanel getSap() {
         return sap;
     }
+
+    public JGrid getJGrid() {
+        return jGrid;
+    }
 }
