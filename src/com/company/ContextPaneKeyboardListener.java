@@ -193,7 +193,55 @@ public class ContextPaneKeyboardListener implements KeyListener {
                     );
                     cp.getSap().updateToggleColorForPanelGroup();
                     break;
+                case 73:
+                    if(heldKeys.size()!=0 && heldKeys.get(0).keyCode==17){
+                        cp.getJGrid().actionHappenedLogic();
+                        for (Cell[] row : cp.getJGrid().getFIGrid().getCells()) {
+                            for (Cell cell : row) {
+                                cell.setMarked(!cell.isMarked());
+                            }
+                            cp.getJGrid().repaint();
+                        }
+                    }
+                    break;
+                case 82: //R
+                    if(heldKeys.size()!=0 && heldKeys.get(0).keyCode==17){
+                        cp.getJGrid().actionHappenedLogic();
+                        for (Cell[] row : cp.getJGrid().getFIGrid().getCells()) {
+                            for (Cell cell : row) {
+                                cell.setMarked(false);
+                            }
+                            cp.getJGrid().repaint();
+                        }
+                    }
+                    break;
                 case 65: //A
+                    if(heldKeys.size()!=0 && heldKeys.get(0).keyCode==17){
+                        cp.getJGrid().actionHappenedLogic();
+                        for (Cell[] row : cp.getJGrid().getFIGrid().getCells()) {
+                            for (Cell cell : row) {
+                                cell.setMarked(true);
+                            }
+                            cp.getJGrid().repaint();
+                        }
+                    }else if (cp.getJGrid().getFIGrid().getLastCellMarked()!=null){
+                        cp.getJGrid().actionHappenedLogic();
+                        if (heldKeys.size()==0) {
+                            for (Cell cell : cp.getJGrid().getFIGrid().getMarkedCells()) {
+                                cell.setMarked(false);
+                            }
+                        }
+                        int posX = cp.getJGrid().getFIGrid().getLastCellMarked().getCol();
+                        int posY = cp.getJGrid().getFIGrid().getLastCellMarked().getRow();
+                        if (posX==0){
+                            posX=Grid.SIZE-1;
+                        }else{
+                            posX--;
+                        }
+                        cp.getJGrid().getFIGrid().setLastCellMarked(cp.getJGrid().getFIGrid().getCells()[posY][posX]);
+                        cp.getJGrid().repaint();
+                    }
+                    break;
                 case 37: //AK_LEFT
                     if (cp.getJGrid().getFIGrid().getLastCellMarked()!=null){
                         cp.getJGrid().actionHappenedLogic();
@@ -456,7 +504,7 @@ class Key{
     private void calcClick(){
         isClickable = keyCode==27 ||
                 (keyCode>=96 && keyCode<=105) || (keyCode>=48 && keyCode<=57) ||
-                keyCode==8 || keyCode==127 ||
+                keyCode==8 || keyCode==127 || keyCode==73 || keyCode==82 ||
                 keyCode==90 || keyCode==88 || keyCode==67 || keyCode==86 ||
                 keyCode==65 || keyCode==83 || keyCode==68 || keyCode==87||
                 keyCode==37 || keyCode==38 || keyCode==39 || keyCode==40;
