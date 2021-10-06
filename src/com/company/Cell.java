@@ -3,7 +3,6 @@ package com.company;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.stream.IntStream;
 
 public class Cell {
     public static final int COLOR_LIMIT = 4;
@@ -18,6 +17,7 @@ public class Cell {
     private ArrayList<Integer> centerDigits = new ArrayList<>();
     private ArrayList<Integer> cornerDigits = new ArrayList<>();
     private ArrayList<Color> colors = new ArrayList<>();
+    private ArrayList<Integer> extra = new ArrayList<>();
 
     public Cell(int row, int col){
         this.row=row;
@@ -76,6 +76,7 @@ public class Cell {
         centerDigits.remove(centerDigit);
     }
     public void addCornerDigit(Integer cornerDigit) {
+
         if (cornerDigits.size()>=CORNER_LIMIT){
             cornerDigits.remove(0);
         }
@@ -95,6 +96,26 @@ public class Cell {
         colors.remove(color);
     }
 
+    public void setExtra(ArrayList<Integer> extra) {
+        this.extra = extra;
+    }
+
+    public ArrayList<Integer> getExtra() {
+        return extra;
+    }
+
+    public void setCornerDigits(ArrayList<Integer> cornerDigits) {
+        this.cornerDigits = cornerDigits;
+    }
+
+    public void setCenterDigits(ArrayList<Integer> centerDigits) {
+        this.centerDigits = centerDigits;
+    }
+
+    public void setColors(ArrayList<Color> colors) {
+        this.colors = colors;
+    }
+
     @Override
     public String toString() {
         return "Cell{" +
@@ -108,4 +129,5 @@ public class Cell {
                 ", col=" + colors +
                 '}';
     }
+
 }

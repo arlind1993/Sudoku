@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.fileAndJSON.CellInput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -19,10 +21,29 @@ public class JGrid extends JPanel {
     private boolean markPenActivated = false;
 
     public JGrid(){
+        this(null);
+    }
+
+    public JGrid(ArrayList<ArrayList<CellInput>> cellInput){
+
         this.setLayout(null);
         this.setSize(SIZE,SIZE);
         this.setBackground(Color.WHITE);
-        addToUndoGrid(new Grid());
+        if (cellInput!=null){
+            Grid g=new Grid();
+            for (int i = 0; i < g.getCells().length; i++) {
+                for (int j = 0; j < g.getCells()[i].length; j++) {
+                    g.getCells()[i][j].setFinalDigit(cellInput.get(i).get(j).getfI());
+                    g.getCells()[i][j].setCenterDigits(cellInput.get(i).get(j).getCenterDigits());
+                    g.getCells()[i][j].setCornerDigits(cellInput.get(i).get(j).getCornerDigits());
+                    g.getCells()[i][j].setColors(cellInput.get(i).get(j).getColors());
+                    g.getCells()[i][j].setExtra(cellInput.get(i).get(j).getExtra());
+                }
+            }
+            addToUndoGrid(g);
+        }else {
+            addToUndoGrid(new Grid());
+        }
         System.out.println(SIZE);
 
 
@@ -204,7 +225,7 @@ public class JGrid extends JPanel {
     }
 
     public Grid getFIGrid() {
-        return undoGrids.peek();
+        return undoGrids.size()==0?null:undoGrids.peek();
     }
 
     public void addToUndoGrid(Grid element) {

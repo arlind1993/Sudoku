@@ -1,0 +1,31 @@
+{
+  "id": 4,
+  "type": "normal",
+  "size": [9,9],
+  "cellInput": [
+    [{"fI": 8}, {"fI":null,"nn":2}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI":null}, {"fI": 3}, {"fI": 6}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI": 7}, {"fI":null}, {"fI":null}, {"fI": 9}, {"fI":null}, {"fI": 2}, {"fI":null}, {"fI":null}],
+
+    [{"fI":null}, {"fI": 5}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 7}, {"fI":null}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 4}, {"fI": 5}, {"fI": 7}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI":null}, {"fI":null}, {"fI": 1}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 3}, {"fI":null}],
+
+    [{"fI":null}, {"fI":null}, {"fI": 1}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 6}, {"fI": 8}],
+    [{"fI":null}, {"fI":null}, {"fI": 8}, {"fI": 5}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 1}, {"fI":null}],
+    [{"fI":null}, {"fI": 9}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 4}, {"fI":null}, {"fI":null}]
+  ],
+  "cellSolved": [
+    [{"fI": 8}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI":null}, {"fI": 3}, {"fI": 6}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI": 7}, {"fI":null}, {"fI":null}, {"fI": 9}, {"fI":null}, {"fI": 2}, {"fI":null}, {"fI":null}],
+
+    [{"fI":null}, {"fI": 5}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 7}, {"fI":null}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 4}, {"fI": 5}, {"fI": 7}, {"fI":null}, {"fI":null}],
+    [{"fI":null}, {"fI":null}, {"fI":null}, {"fI": 1}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 3}, {"fI":null}],
+
+    [{"fI":null}, {"fI":null}, {"fI": 1}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 6}, {"fI": 8}],
+    [{"fI":null}, {"fI":null}, {"fI": 8}, {"fI": 5}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 1}, {"fI":null}],
+    [{"fI":null}, {"fI": 9}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI":null}, {"fI": 4}, {"fI":null}, {"fI":null}]
+  ]
+}

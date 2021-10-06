@@ -1,5 +1,8 @@
 package com.company;
 
+import com.company.fileAndJSON.GsonClass;
+import com.company.fileAndJSON.MyFileClass;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,13 +13,26 @@ public class ContextPane extends JPanel {
 
     private JGrid jGrid;
     private SudokuActionPanel sap;
-
+    private MyFileClass fc;
     private ContextPaneKeyboardListener cpkl;
+    private GsonClass gc=null;
 
     public ContextPane(){
+        this(null);
+    }
+
+    public ContextPane(MyFileClass fc){
+        this.fc=fc;
+
         this.setLayout(null);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        jGrid=new JGrid();
+
+        if(fc!=null){
+            gc=new GsonClass(fc.readBRString());
+            jGrid=new JGrid(gc.getSc().getCellInput());
+        }else {
+            jGrid=new JGrid();
+        }
         jGrid.setLocation(5,5);
         sap=new SudokuActionPanel(jGrid);
         sap.setLocation(630,200);
@@ -28,14 +44,15 @@ public class ContextPane extends JPanel {
         this.addKeyListener(cpkl);
     }
 
+    public MyFileClass getFc() {
+        return fc;
+    }
     public ContextPaneKeyboardListener getCpkl() {
         return cpkl;
     }
-
     public SudokuActionPanel getSap() {
         return sap;
     }
-
     public JGrid getJGrid() {
         return jGrid;
     }
